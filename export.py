@@ -35,7 +35,6 @@ def load_workbook_data(filename):
     return wb
 
 def prettify(elem):
-    """Возвращает красивую строку XML для элемента."""
     rough_string = tostring(elem, 'utf-8')
     reparsed = parseString(rough_string)
     return reparsed.toprettyxml(indent="   ", encoding="UTF-8")
@@ -48,10 +47,6 @@ def add_to_zip(filepath,INN,UID):
        return filepath 
 
 def create_xml(sheet1,sheet2, config, now_local):
-    tagsContractor = ['Total', 'Name', 'INN', 'ContractNumber', 'ContractDate', 
-        'AccountNumber', 'Cost', 'PaymentPlanned', 'PaymentCurrent', 
-        'FinishDate']
-   
     root = Element('Message')
     create_sub_element(root, "CreateDate",str(now_local))
     thisUID = str(uuid.uuid4())
