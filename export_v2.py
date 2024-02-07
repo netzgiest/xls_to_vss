@@ -1,5 +1,4 @@
 from openpyxl import load_workbook
-from xml.dom.minidom import parseString
 import xml.etree.ElementTree as ET
 from datetime import datetime
 import json,os,pytz, uuid,zipfile
@@ -26,11 +25,21 @@ def load_workbook_data(filename):
     wb = load_workbook(filename=filename, read_only=True)
     return wb
 
-def prettify(elem):
-    from xml.etree.ElementTree import tostring
-    rough_string = tostring(elem, 'utf-8')
-    reparsed = parseString(rough_string)
-    return reparsed.toprettyxml(indent="   ", encoding="UTF-8")
+def prettify_xml(element, level=0, indent='   '):
+    if element: # checks if element has children
+        if not element.text or not element.text.strip():
+            element.text = '\n' + (level+1) * indent
+        if not element.tail or not element.tail.strip():
+            element.tail = '\n' + level * indent
+        for element in element:
+            prettify_xml(element, level+1, indent)
+    else:
+        if level and (not element.tail or not element.tail.strip()):
+            element.tail = '\n' + level * indent
+
+def xml_to_pretty_string(root):
+    prettify_xml(root)
+    return ET.tostring(root, encoding='unicode')
 
 def add_to_zip(filepath,INN,UID):
     zip_name = f"{INN}_{datetime.now().strftime('%Y%m%d')}_{UID}.zip"
@@ -95,7 +104,7 @@ def create_xml(sheet1,sheet2, config, now_local):
         for reason in reasons:
          if  reason.strip() != 'None' and reason.strip() != '':
             ET.SubElement(Reasons,"Reason").text=reason.strip()
-    xmlstr = prettify(root)
+    xmlstr = xml_to_pretty_string(root)
     return xmlstr,config
 
 def update_config(filename, config):
@@ -104,7 +113,7 @@ def update_config(filename, config):
         configfile.write(config_json)
 
 def save_xml(xmlstr, filename):
-    with open(filename, "wb") as f:
+    with open(filename, "w",encoding='utf-8') as f:
         f.write(xmlstr)
 
 def main():
