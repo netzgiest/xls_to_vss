@@ -1,0 +1,1 @@
+pyinstaller --noconfirm --onefile --console --icon "D:/хуитаповсст/fuck_hand_middle_finger_icon_178853.ico" --add-data "D:/хуитаповсст/config.json;."  "D:/хуитаповсст/xport.py"
