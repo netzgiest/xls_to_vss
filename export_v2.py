@@ -26,7 +26,7 @@ def load_workbook_data(filename):
     return wb
 
 def prettify_xml(element, level=0, indent='   '):
-    if element: # checks if element has children
+    if element:
         if not element.text or not element.text.strip():
             element.text = '\n' + (level+1) * indent
         if not element.tail or not element.tail.strip():
@@ -42,12 +42,28 @@ def xml_to_pretty_string(root):
     return ET.tostring(root, encoding='unicode')
 
 def add_to_zip(filepath,INN,UID):
-    zip_name = f"{INN}_{datetime.now().strftime('%Y%m%d')}_{UID}.zip"
-
+    zip_name = os.path.dirname(filepath) + f"{INN}_{datetime.now().strftime('%Y%m%d')}_{UID}.zip"
+    print(zip_name)
     with zipfile.ZipFile(zip_name,'w') as zipf:
        zipf.write(filepath)
        return filepath 
+    
+def find_last_row_with_prefix(sheet, start_row, prefix):
+    last_row = None
+    for row in range(start_row, sheet.max_row + 1):
+        cell_value = sheet.cell(row=row, column=1).value
+        # Предполагается, что значение является строкой и начинается с указанного префикса
+        if str(cell_value).startswith(prefix):
+            last_row = row
+    return last_row
 
+def find_first_row_with_prefix(sheet, start_row, prefix):
+    for row in range(start_row, sheet.max_row + 1):
+        cell_value = sheet.cell(row=row, column=1).value
+        # Проверяем, что значение является строкой и начинается с указанного префикса
+        if isinstance(cell_value, str) and cell_value.startswith(prefix):
+            return row
+    return None
 def create_xml(sheet1,sheet2, config, now_local):
     thisUID = str(uuid.uuid4())
     root =ET.Element('Message',{'CreateDate':str(now_local),'UID':thisUID,'PreviousUID':str(config["PreviousUID"])})
@@ -59,16 +75,16 @@ def create_xml(sheet1,sheet2, config, now_local):
     Forms = ET.SubElement(root,"Forms")
     Form8=ET.SubElement(Forms,"Form",{'type':'8',"ReportDate":str(now_local),'Year':str(sheet1[config['start_indexes']['Year']].value),
                                       'Quarter':str(sheet1[config["start_indexes"]["Ouarter"]].value)})
-    ContractSpending=ET.SubElement(Form8,"ContractSpending",{"Salary":str(sheet1[config["start_indexes"]["Salary"]].value*100),
-                                                             "Taxes":str(sheet1[config["start_indexes"]["Taxes"]].value*100),
-                                                             "Rates":str(sheet1[config["start_indexes"]["Rates"]].value*100),
-                                                             "Other":str(sheet1[config["start_indexes"]["Other"]].value*100),
-                                                             "Reserve":str(sheet1[config["start_indexes"]["Reserve"]].value*100),
+    ContractSpending=ET.SubElement(Form8,"ContractSpending",{"Salary":str(int(sheet1[config["start_indexes"]["Salary"]].value*100)),
+                                                             "Taxes":str(int(sheet1[config["start_indexes"]["Taxes"]].value*100)),
+                                                             "Rates":str(int(sheet1[config["start_indexes"]["Rates"]].value*100)),
+                                                             "Other":str(int(sheet1[config["start_indexes"]["Other"]].value*100)),
+                                                             "Reserve":str(int(sheet1[config["start_indexes"]["Reserve"]].value*100)),
                                                              "Income":str(int(sheet1[config["start_indexes"]["Income"]].value)*100)
                                                              })
     Contractors = ET.SubElement(Form8, 'Contractors') 
-    nextCell = int(config["start_indexes"]["startcontractor"])
-    for row in range(nextCell, sheet1.max_row + 1):
+    #int(config["start_indexes"]["startcontractor"])
+    for row in range(find_first_row_with_prefix(sheet1,1,"2."), sheet1.max_row + 1):
      if str(sheet1.cell(row=row, column=1).value).startswith('2'):
       Contractor = ET.SubElement(Contractors,"Contractor",{'Total':str(int(sheet1.cell(row=row, column=3).value)*100),
                                                            'Name':str(sheet1.cell(row=row, column=4).value),
@@ -80,10 +96,10 @@ def create_xml(sheet1,sheet2, config, now_local):
                                                            'PaymentPlanned':str(int(sheet1.cell(row=row, column=10).value)*100),
                                                            'FinishDate': str(current_datetime(sheet1.cell(row=row, column=12).value))})
         
-      nextCell=row+1
-    PlannedPay=ET.SubElement(Form8,"PlannedPay",{"PaymentPlanned":str(int(sheet1['J'+str(nextCell)].value)*100),
-                                                 "Total":str(int(sheet1['I'+str(nextCell)].value)*100),
-                                                 "PlannedPay":str(int(sheet1['C'+str(nextCell)].value)*100)})
+    nextCell=find_last_row_with_prefix(sheet1,1,'2')
+    PlannedPay=ET.SubElement(Form8,"PlannedPay",{"Total":str(int(sheet1['I'+str(nextCell)].value)*100),
+                                                 "PaymentPlanned":str(int(sheet1['J'+str(nextCell)].value)*100),
+                                                 "PaymentCurrent":str(int(sheet1['C'+str(nextCell)].value)*100)})
     ContractFinance=ET.SubElement(Form8,"ContractFinance",{"TotalRequirement":str(int(sheet1['C'+str(nextCell+1)].value)*100),
                                                            "CashBalance":str(int(sheet1['C'+str(nextCell+2)].value)*100),
                                                            "PlannedIncome":str(int(sheet1['C'+str(nextCell+3)].value)*100),
@@ -100,7 +116,7 @@ def create_xml(sheet1,sheet2, config, now_local):
        
         reasons = str(sheet2.cell(row=row, column=5).value).split(',')
         if any(reason.strip() != 'None' and reason.strip() != '' for reason in reasons):
-           Reasons = ET.SubElement(Parts,"Reasons")
+           Reasons = ET.SubElement(Part,"Reasons")
         for reason in reasons:
          if  reason.strip() != 'None' and reason.strip() != '':
             ET.SubElement(Reasons,"Reason").text=reason.strip()
