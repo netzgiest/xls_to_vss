@@ -170,3 +170,4 @@ test.py
 /.vscode
 /output
 *.zip
+export_v2_1.py
