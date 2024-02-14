@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="Message">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Organization">
+					<xs:complexType>
+						<xs:attribute name="INN" use="required">
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:pattern value="(([0-9][1-9]|[1-9][0-9])[0-9]{8})"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="KPP" use="required">
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:pattern value="(([0-9][1-9]|[1-9][0-9])[0-9]{2}([0-9][1-9]|[1-9][0-9]|[A-Z]{2})[0-9]{3})"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="Name" type="xs:string" use="required"/>
+						<xs:attribute name="GOZUID" use="required">
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:pattern value="\d{25}"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="ContractDate" type="xs:dateTime" use="required"/>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Forms">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Form8">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="ContractSpending">
+											<xs:complexType>
+												<xs:attribute name="Total" type="xs:integer" use="required"/>
+												<xs:attribute name="Salary" type="xs:integer" use="required"/>
+												<xs:attribute name="Taxes" type="xs:integer" use="required"/>
+												<xs:attribute name="Rates" type="xs:integer" use="required"/>
+												<xs:attribute name="Other" type="xs:integer" use="required"/>
+												<xs:attribute name="Reserve" type="xs:integer" use="required"/>
+												<xs:attribute name="Income" type="xs:integer" use="required"/>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="Contractors">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="Contractor" maxOccurs="unbounded">
+														<xs:complexType>
+															<xs:attribute name="Total" type="xs:integer" use="required"/>
+															<xs:attribute name="Name" type="xs:string" use="required"/>
+															<xs:attribute name="INN" type="xs:string" use="required"/>
+															<xs:attribute name="ContractNumber" use="required">
+																<xs:simpleType>
+																	<xs:restriction base="xs:string">
+																		<xs:maxLength value="255"/>
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:attribute>
+															<xs:attribute name="ContractDate" type="xs:dateTime" use="required"/>
+															<xs:attribute name="AccountNumber" use="required">
+																<xs:simpleType>
+																	<xs:restriction base="xs:string">
+																		<xs:maxLength value="20"/>
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:attribute>
+															<xs:attribute name="Cost" type="xs:integer" use="required"/>
+															<xs:attribute name="PaymentPlanned" type="xs:integer" use="required"/>
+															<xs:attribute name="PaymentCurrent" type="xs:integer" use="required"/>
+															<xs:attribute name="FinishDate" type="xs:dateTime" use="required"/>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="PlannedPay">
+											<xs:complexType>
+												<xs:attribute name="Total" type="xs:integer" use="required"/>
+												<xs:attribute name="PaymentPlanned" type="xs:integer" use="required"/>
+												<xs:attribute name="PaymentCurrent" type="xs:integer" use="required"/>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="ContractFinance">
+											<xs:complexType>
+												<xs:attribute name="TotalRequirement" type="xs:integer" use="required"/>
+												<xs:attribute name="CashBalance" type="xs:integer" use="required"/>
+												<xs:attribute name="DateBalance" type="xs:dateTime" use="required"/>
+												<xs:attribute name="PlannedIncome" type="xs:integer" use="required"/>
+												<xs:attribute name="DepositeIncome" type="xs:integer" use="required"/>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute name="ReportDate" type="xs:dateTime" use="required"/>
+									<xs:attribute name="Year" type="xs:unsignedShort" use="required"/>
+									<xs:attribute name="Quarter" type="xs:unsignedByte" use="required"/>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="Supplement" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="Parts">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="Part" maxOccurs="unbounded">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="Reasons" maxOccurs="unbounded">
+																	<xs:complexType>
+																		<xs:sequence>
+																			<xs:element name="Reason" type="xs:unsignedByte" maxOccurs="unbounded"/>
+																		</xs:sequence>
+																	</xs:complexType>
+																</xs:element>
+															</xs:sequence>
+															<xs:attribute name="Year" type="xs:unsignedShort" use="required"/>
+															<xs:attribute name="Quarter" type="xs:unsignedByte" use="required"/>
+															<xs:attribute name="Requirement" type="xs:integer" use="required"/>
+															<xs:attribute name="Deviation" type="xs:integer" use="required"/>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute name="ReportDate" type="xs:dateTime" use="required"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="CreateDate" type="xs:dateTime" use="required"/>
+			<xs:attribute name="UID" type="xs:string" use="required"/>
+			<xs:attribute name="PreviousUID" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

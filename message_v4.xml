@@ -1,0 +1,31 @@
+<?xml version ="1.0" encoding ="UTF-8"?>
+<Message CreateDate="2024-02-09T11:25:21Z" UID="94f075c7-0915-4762-9545-7ad27df54a89" PreviousUID="0">
+	<Organization INN="2818736027" KPP="385343622" Name="ООО Лютик" GOZUID="1234567890123456789012345" ContractDate="2023-12-15T00:00:00Z"/>
+	<Forms>
+		<Form8 ReportDate="2024-01-25T00:00:00Z" Year="2024" Quarter="1">
+			<ContractSpending Total="76295095170" Salary="12345678989" Taxes="2345678912" Rates="3456789123" Other="45678912345" Reserve="5678912345" Income="6789123456"/>
+			<Contractors>
+				<Contractor Total="1472583691" Name="ООО Рассвет" INN="8520710964" ContractNumber="1-2023-12" ContractDate="2023-12-15T00:00:00Z" AccountNumber="40105810200000000111" Cost="400000000" PaymentPlanned="1472583691" PaymentCurrent="736291846" FinishDate="2024-06-30T00:00:00Z"/>
+				<Contractor Total="25836914725" Name="ООО Заря" INN="7457512346" ContractNumber="2/дог-23" ContractDate="2023-12-16T00:00:00Z" AccountNumber="40105810200000000222" Cost="300000000" PaymentPlanned="25836914725" PaymentCurrent="12918457363" FinishDate="2024-07-28T00:00:00Z"/>
+				<Contractor Total="36914725836" Name="ООО Шторм" INN="6123128114" ContractNumber="33/56" ContractDate="2023-12-17T00:00:00Z" AccountNumber="40105810200000000333" Cost="500000000" PaymentPlanned="36914725836" PaymentCurrent="18457362918" FinishDate="2024-08-31T00:00:00Z"/>
+			</Contractors>
+			<PlannedPay Total="64224224252" PaymentPlanned="120000000000" PaymentCurrent="64224224252"/>
+			<ContractFinance TotalRequirement="140519319422" CashBalance="0" DateBalance="2023-12-22T00:00:00Z"  PlannedIncome="100000000000" DepositeIncome="0"/>
+		</Form8>
+		<Supplement ReportDate="2023-12-25T00:00:00Z">
+			<Parts>
+				<Part Year="2023" Quarter="4" Requirement="20000000000" Deviation="55000000">
+					<Reasons>
+						<Reason>7</Reason>
+					</Reasons>
+				</Part>
+				<Part Year="2024" Quarter="1" Requirement="140519319422" Deviation="-5000000">
+					<Reasons>
+						<Reason>1</Reason>
+						<Reason>2</Reason>
+					</Reasons>
+				</Part>
+			</Parts>
+		</Supplement>
+	</Forms>
+</Message>
