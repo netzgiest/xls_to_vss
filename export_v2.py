@@ -12,27 +12,17 @@ def load_config(filename:str):
     config = json.loads(config_json)
     return config
 
-# def current_datetime(value=None):
-#     tz = pytz.timezone("Europe/Moscow")
-#     if value is None:
-#      now_utc = datetime.now(pytz.UTC)
-#      now_local = now_utc.astimezone(tz).isoformat()
-#     else:
-#      now_local= tz.localize(datetime.strptime(str(value), "%d.%m.%Y")).replace(hour=0, minute=0, second=0).isoformat(timespec='seconds')
-      
-#     return now_local
 def current_datetime(value=None):
     
     tz = pytz.timezone("Europe/Moscow")
     if value is None:
-        # Получаем текущее время в UTC
-        now_utc = datetime.now(pytz.UTC)
+       now_utc = datetime.now(pytz.UTC)
     else:
         local_dt = datetime.strptime(str(value), "%d.%m.%Y")
         local_dt = tz.localize(local_dt.replace(hour=0, minute=0, second=0, microsecond=0), is_dst=None)
         now_utc = local_dt.astimezone(pytz.UTC)
-    
-    # Конвертируем время в ISO-формат с Z обозначающим UTC
+ 
+
     return now_utc.replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 def load_workbook_data(filename):
@@ -83,7 +73,7 @@ def create_xml(sheet1,sheet2, config, now_local):
                                                  
     Forms=ET.SubElement(root,"Forms")
     Form8=ET.SubElement(Forms,"Form8",{"ReportDate":reportdate,'Year':str(sheet1[config['start_indexes']['Year']].value),
-                                      'Quarter':str(sheet1[config["start_indexes"]["Ouarter"]].value)})
+                                      'Quarter':str(sheet1[config["start_indexes"]["Quarter"]].value)})
     ContractSpending=ET.SubElement(Form8,"ContractSpending")
     Contractors = ET.SubElement(Form8, 'Contractors')
     PlannedPay=ET.SubElement(Form8,"PlannedPay")
@@ -104,30 +94,30 @@ def create_xml(sheet1,sheet2, config, now_local):
       if str(sheet1.cell(row=row, column=1).value).startswith('1.6'):  
         ContractSpending.set("Income",str(int(sheet1.cell(row=row, column=3).value*100)))
       if str(sheet1.cell(row=row, column=1).value).startswith('2.'):
-       Contractor = ET.SubElement(Contractors,"Contractor",{'Total':str(int(sheet1.cell(row=row, column=3).value)*100),
+       Contractor = ET.SubElement(Contractors,"Contractor",{'Total':str(int(sheet1.cell(row=row, column=3).value*100)),
                                                            'Name':str(sheet1.cell(row=row, column=4).value),
                                                            'INN':str(sheet1.cell(row=row, column=5).value),
                                                            'ContractNumber':str(sheet1.cell(row=row, column=6).value),
                                                            'ContractDate': str(current_datetime(sheet1.cell(row=row, column=7).value)),
                                                            'AccountNumber':str(sheet1.cell(row=row, column=8).value),
-                                                           'Cost': str(int(sheet1.cell(row=row, column=9).value)*100),
-                                                           'PaymentPlanned':str(int(sheet1.cell(row=row, column=10).value)*100),
-                                                           'PaymentCurrent':str(int(sheet1.cell(row=row, column=11).value)*100),
+                                                           'Cost': str(int(sheet1.cell(row=row, column=9).value*100)),
+                                                           'PaymentPlanned':str(int(sheet1.cell(row=row, column=10).value*100)),
+                                                           'PaymentCurrent':str(int(sheet1.cell(row=row, column=11).value*100)),
                                                            'FinishDate': str(current_datetime(sheet1.cell(row=row, column=12).value))})
       if str(sheet1.cell(row=row, column=1).value)=='3':
-       PlannedPay.set("Total", str(int(sheet1.cell(row=row, column=9).value)*100)) #цена договора?
-       PlannedPay.set("PaymentPlanned", str(int(sheet1.cell(row=row, column=10).value)*100))
-       PlannedPay.set("PaymentCurrent", str(int(sheet1.cell(row=row, column=3).value)*100))
+       PlannedPay.set("Total", str(int(sheet1.cell(row=row, column=9).value*100))) #цена договора?
+       PlannedPay.set("PaymentPlanned", str(int(sheet1.cell(row=row, column=10).value*100)))
+       PlannedPay.set("PaymentCurrent", str(int(sheet1.cell(row=row, column=3).value*100)))
      
       if str(sheet1.cell(row=row, column=1).value)=='4':
        ContractFinance.set("TotalRequirement",str(int(sheet1.cell(row=row, column=3).value*100)))
       if str(sheet1.cell(row=row, column=1).value).startswith('5'): 
-       ContractFinance.set("CashBalance",str(int(sheet1.cell(row=row, column=3).value)*100))
+       ContractFinance.set("CashBalance",str(int(sheet1.cell(row=row, column=3).value*100)))
       ContractFinance.set("DateBalance",reportdate)
       if str(sheet1.cell(row=row, column=1).value).startswith('6'):
-       ContractFinance.set("PlannedIncome",str(int(sheet1.cell(row=row, column=3).value)*100))
+       ContractFinance.set("PlannedIncome",str(int(sheet1.cell(row=row, column=3).value*100)))
       if str(sheet1.cell(row=row, column=1).value).startswith('7'):
-       ContractFinance.set("DepositeIncome",str(int(sheet1.cell(row=row, column=3).value)*100))
+       ContractFinance.set("DepositeIncome",str(int(sheet1.cell(row=row, column=3).value*100)))
     
     FormSupplement=ET.SubElement(Forms,'Supplement',{'ReportDate':reportdate})
     Parts=ET.SubElement(FormSupplement,"Parts")
@@ -135,11 +125,11 @@ def create_xml(sheet1,sheet2, config, now_local):
       if str(sheet2.cell(row=row, column=1).value).startswith('202'):
         Part=ET.SubElement(Parts,"Part",{"Year":str(sheet2.cell(row=row, column=1).value),
                                   "Quarter":str(sheet2.cell(row=row, column=2).value),
-                                  "Requirement":str(int(sheet2.cell(row=row, column=3).value)*100),
-                                  "Deviation":str(int(sheet2.cell(row=row, column=4).value)*100)})
+                                  "Requirement":str(int(sheet2.cell(row=row, column=3).value*100)),
+                                  "Deviation":str(int(sheet2.cell(row=row, column=4).value*100))})
        
         reasons = str(sheet2.cell(row=row, column=5).value).split(',')
-        #if any(reason.strip() != 'None' and reason.strip() != '' for reason in reasons):
+        
         Reasons = ET.SubElement(Part,"Reasons")
         for reason in reasons:
          if  reason.strip() != 'None': #and reason.strip() != '':
