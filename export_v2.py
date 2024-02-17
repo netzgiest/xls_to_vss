@@ -13,17 +13,28 @@ def load_config(filename:str):
     return config
 
 def current_datetime(value=None):
-    
     tz = pytz.timezone("Europe/Moscow")
     if value is None:
-       now_utc = datetime.now(pytz.UTC)
+        now = datetime.now(tz).replace(microsecond=0)
     else:
-        local_dt = datetime.strptime(str(value), "%d.%m.%Y")
-        local_dt = tz.localize(local_dt.replace(hour=0, minute=0, second=0, microsecond=0), is_dst=None)
-        now_utc = local_dt.astimezone(pytz.UTC)
- 
-
-    return now_utc.replace(microsecond=0).isoformat().replace("+00:00", "Z")
+        if isinstance(value, datetime):
+            if value.tzinfo is None or value.tzinfo.utcoffset(value) is None:
+                now = tz.localize(value.replace(microsecond=0), is_dst=None)
+            else:
+                now = value.astimezone(tz).replace(microsecond=0)
+        elif isinstance(value, str):
+            value = value.replace('г.', '').strip()
+            try:
+                parsed_date = datetime.strptime(value, "%d.%m.%Y")
+                now = tz.localize(parsed_date.replace(hour=0, minute=0, second=0, microsecond=0), is_dst=None)
+            except ValueError as e:
+                messagebox.showerror("Ошибка", f"Ошибка преобразования даты: {e}")
+                return None
+        else:
+            messagebox.showwarning("Внимание", "Недопустимое значение даты в ячейке")
+            return None
+    now_moscow_iso = now.isoformat().replace('+03:00', 'Z')
+    return now_moscow_iso
 
 def load_workbook_data(filename):
     wb = load_workbook(filename=filename, read_only=True)
