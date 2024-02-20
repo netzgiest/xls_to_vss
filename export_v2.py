@@ -67,6 +67,7 @@ def find_first_row_with_prefix(sheet, start_row, prefix):
         if isinstance(cell_value, str) and cell_value.startswith(prefix):
             return row
     return None
+
 def create_xml(sheet1,sheet2, config, now_local):
     thisUID = str(uuid.uuid4())
     reportdate=str(now_local)
@@ -122,12 +123,12 @@ def create_xml(sheet1,sheet2, config, now_local):
      
       if str(sheet1.cell(row=row, column=1).value)=='4':
        ContractFinance.set("TotalRequirement",str(int(sheet1.cell(row=row, column=3).value*100)))
-      if str(sheet1.cell(row=row, column=1).value).startswith('5'): 
+      if str(sheet1.cell(row=row, column=1).value)=='5': 
        ContractFinance.set("CashBalance",str(int(sheet1.cell(row=row, column=3).value*100)))
       ContractFinance.set("DateBalance",reportdate)
-      if str(sheet1.cell(row=row, column=1).value).startswith('6'):
+      if str(sheet1.cell(row=row, column=1).value)=='6':
        ContractFinance.set("PlannedIncome",str(int(sheet1.cell(row=row, column=3).value*100)))
-      if str(sheet1.cell(row=row, column=1).value).startswith('7'):
+      if str(sheet1.cell(row=row, column=1).value)=='7':
        ContractFinance.set("DepositeIncome",str(int(sheet1.cell(row=row, column=3).value*100)))
     
     FormSupplement=ET.SubElement(Forms,'Supplement',{'ReportDate':reportdate})

@@ -23,19 +23,6 @@ def load_config(filename:str):
         config_json = configfile.read()
     config = json.loads(config_json)
     return config
-
-def format_number(cell_value):
-    if cell_value is None or cell_value == 'None':
-        return 0
-    elif isinstance(cell_value, (int, float)):
-        # Используем int для целых чисел и округления, если значение изначально float
-        return int(cell_value)
-    elif isinstance(cell_value, str) and cell_value.isdigit():
-        # Если значение строковое, но состоит только из цифр, приводим к int
-        return int(cell_value)
-    else:
-        messagebox.showwarning("Внимание", "Недопустимое числовое значение в ячейке")
-        return 0
     
 def current_datetime(value=None):
     tz = pytz.timezone("Europe/Moscow")
@@ -77,13 +64,10 @@ def add_to_zip(filepath,INN,UID):
        zipf.write(filepath)
        return filepath 
 
-def toKop(value):
-    return int(value * 100)
 
 def add_child_element(parent, tag, sheet, row, column):
     try:
         cell_value = sheet.cell(row=row, column=column).value
-        # Если значение ячейки - формула, то оно будет вычислено автоматически (при использовании openpyxl)
         if isinstance(cell_value, (float,str)) or cell_value == 0:
             # Конвертируем значение в копейки и добавляем элемент.
             parent.set(tag, str(int(cell_value*100)))
@@ -162,8 +146,8 @@ def create_xml(sheet1,sheet2, config, now_local):
       if str(sheet2.cell(row=row, column=1).value).startswith('202'):
         Part=ET.SubElement(Parts,"Part",{"Year":str(sheet2.cell(row=row, column=1).value),
                                   "Quarter":str(sheet2.cell(row=row, column=2).value),
-                                  "Requirement":str(int(sheet2.cell(row=row, column=3).value)*100),
-                                  "Deviation":str(int(sheet2.cell(row=row, column=4).value)*100)})
+                                  "Requirement":str(int(sheet2.cell(row=row, column=3).value*100)),
+                                  "Deviation":str(int(sheet2.cell(row=row, column=4).value*100))})
        
         reasons = str(sheet2.cell(row=row, column=5).value).split(',')
         Reasons = ET.SubElement(Part,"Reasons")
