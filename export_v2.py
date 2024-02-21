@@ -51,7 +51,7 @@ def xml_to_pretty_string(element, level=0, indent='   '):
     else:       
         if level and (not element.tail or not element.tail.strip()):
             element.tail = '\n' + level * indent
-    return ET.tostring(element, encoding='UTF-8', xml_declaration=True, method='xml').decode('UTF-8')
+    return ET.tostring(element, encoding="UTF-8", xml_declaration=True, method='xml').decode("UTF-8")
 
 
 def add_to_zip(filepath,INN,UID):

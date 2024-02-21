@@ -183,7 +183,7 @@ def main():
     root.withdraw()
     
     from tkinter import filedialog
-    xlsx_file_path = 'd:\pole.xlsx' #filedialog.askopenfilename(title="Выберите XLSX файл", filetypes=[("XLSX Files", "*.xlsx")])
+    xlsx_file_path = filedialog.askopenfilename(title="Выберите XLSX файл", filetypes=[("XLSX Files", "*.xlsx")])
     config = load_config("config.json")
     try:
      workbook = load_workbook_data(xlsx_file_path)
@@ -192,12 +192,12 @@ def main():
      xmlstr,updated_config = create_xml(sheet1,sheet2, config, current_datetime())
     except SheetTitleException as e:
        messagebox.ERROR(e)
-    save_xml(xmlstr, os.path.dirname(xlsx_file_path) + "\message1.xml")
+    save_xml(xmlstr, os.path.dirname(xlsx_file_path) + "\message.xml")
     update_config("config.json", updated_config) 
-   # add_to_zip(os.path.dirname(xlsx_file_path)+'\message.xml',config["INN"],config["PreviousUID"])
-   # messagebox.showinfo("SAIBIS","XML отчет сохранен рядом с " + xlsx_file_path)
+    add_to_zip(os.path.dirname(xlsx_file_path)+'\message.xml',config["INN"],config["PreviousUID"])
+    messagebox.showinfo("SAIBIS","XML отчет сохранен рядом с " + xlsx_file_path)
     validation_message = validate_xml(xmlstr, 'message_v4.xsd')
-   # messagebox.showinfo("saibis",validation_message)
+    messagebox.showinfo("saibis",validation_message)
     if validation_message.__contains__("Ошибка валидации"):
        messagebox.showinfo("saibis",validation_message)
     else:
