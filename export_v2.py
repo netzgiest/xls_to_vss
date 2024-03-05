@@ -179,9 +179,9 @@ def main():
         xml_root = etree.XML(f.read())
        try:
         schema.assertValid(xml_root)
-        print("XML соответствует XSD схеме.")
+        messagebox.showinfo("saibis","XML соответствует XSD схеме.")
        except etree.DocumentInvalid as err:
-        print("Ошибка валидации:", err)
+        messagebox.showinfo( "Ошипка","Ошибка валидации:"+ str(err))
       except IOError as err:
        print(err) 
     except IOError as err:
