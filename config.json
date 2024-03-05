@@ -1,1 +1,18 @@
-{"INN": "6163111477", "KPP": "616301001", "NAME": "АО \"ВНИИ \"ГРАДИЕНТ\"", "PreviousUID": "ccaefecb-7620-4b7d-83f8-4da84796cb51", "GOZUID": "H3", "start_indexes": {"ContractDate": "F3", "Year": "D3", "Quarter": "B3", "Salary": "C9", "Taxes": "C10", "Rates": "C11", "Other": "C12", "Reserve": "C13", "Income": "C14"}}
+{
+  "INN": "7703695266",
+  "KPP": "774550001",
+  "NAME": "АО \"РОГА\"",
+  "PreviousUID": "0",
+  "GOZUID": "H3",
+  "start_indexes": {
+    "ContractDate": "F3",
+    "Year": "D3",
+    "Quarter": "B3",
+    "Salary": "C9",
+    "Taxes": "C10",
+    "Rates": "C11",
+    "Other": "C12",
+    "Reserve": "C13",
+    "Income": "C14"
+  }
+}

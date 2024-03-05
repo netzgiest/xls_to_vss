@@ -40,25 +40,14 @@ def load_workbook_data(filename):
     wb = load_workbook(filename=filename, read_only=True)
     return wb
 
-def xml_to_pretty_string(element, level=0, indent='   '):
-    if len(element):        
-        if not element.text or not element.text.strip():
-            element.text = '\n' + (level+1) * indent        
-        for subelement in element:
-            xml_to_pretty_string(subelement, level+1, indent)        
-        if not subelement.tail or not subelement.tail.strip():
-            subelement.tail = '\n' + level * indent
-    else:       
-        if level and (not element.tail or not element.tail.strip()):
-            element.tail = '\n' + level * indent
-    return ET.tostring(element, encoding="UTF-8", xml_declaration=True, method='xml').decode("UTF-8")
+
 
 
 def add_to_zip(filepath,INN,UID):
-    zip_name = os.path.dirname(filepath) + f"{INN}_{datetime.now().strftime('%Y%m%d')}_{UID}.zip"
+    zip_name = os.path.join(os.path.dirname(filepath), f"{INN}_{datetime.now().strftime('%Y%m%d')}_{UID}.zip")
     print(zip_name)
     with zipfile.ZipFile(zip_name,'w') as zipf:
-       zipf.write(filepath)
+       zipf.write(filepath,os.path.basename(filepath))
        return filepath 
  
 def find_first_row_with_prefix(sheet, start_row, prefix):
@@ -147,7 +136,8 @@ def create_xml(sheet1,sheet2, config, now_local):
          if  reason.strip() != 'None': #and reason.strip() != '':
             ET.SubElement(Reasons,"Reason").text=reason.strip()
        
-    xmlstr = xml_to_pretty_string(root)
+    from xml.dom.minidom import parseString  
+    xmlstr = parseString(ET.tostring(root,encoding="UTF-8", xml_declaration=True)).toprettyxml(encoding="UTF-8")
     
     return xmlstr,config
 
@@ -157,7 +147,7 @@ def update_config(filename, config):
         configfile.write(config_json)
 
 def save_xml(xmlstr, filename):
-    with open(filename, "w",encoding='utf-8') as f:
+    with open(filename, "wb") as f:
         f.write(xmlstr)
 
 def main():

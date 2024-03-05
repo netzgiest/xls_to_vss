@@ -156,7 +156,7 @@ def create_xml(sheet1,sheet2, config, now_local):
             ET.SubElement(Reasons,"Reason").text=reason.strip()
     
     from xml.dom.minidom import parseString  
-    xmlstr = parseString(ET.tostring(root,encoding='UTF-8', xml_declaration=True)).toprettyxml(encoding="UTF-8")
+    xmlstr = parseString(ET.tostring(root,encoding="UTF-8", xml_declaration=True)).toprettyxml(encoding="UTF-8")
     
     return xmlstr,config
 
