@@ -1,0 +1,43 @@
+<?xml version ="1.0" encoding ="UTF-8"?>
+<Message CreateDate="2024-02-09T11:25:21Z" UID="94f075c7-0915-4762-9545-7ad27df54a89" PreviousUID="0"> <!--для первого сообщения -->
+	<Organization   INN="2818736027" KPP="385343622" Name="ООО Лютик" GOZUID="1234567890123456789012345" ContractDate="2023-12-15T00:00:00Z"/>
+	<Forms>
+		<Cash ReportDate="2024-01-25T00:00:00Z" Year="2024" Quarter="1">
+			<ContractSpending 
+				Total="50975453193" 
+				Salary="12345678989" 
+				Taxes="2345678912" 
+				Rates="3456789123" 
+				OtherTotal="20359270368" 
+				Return="5678912345" 
+				Repayment="6789123456" 
+				Another="7891234567" 
+				Reserve="5678912345" 
+				Income="6789123456"/>
+			<ContractFinance 
+				PlannedPay="78912345678" 
+				TotalRequirement="129887798871" 
+				CashBalance="1" 
+				PlannedIncome="100000000000" 
+				PastPayments="40562751639" 
+				SeparateAccount="14725836914" 
+				BankAccount="25836914725"/>
+		</Cash>
+		<Supplement ReportDate="2023-12-25T00:00:00Z">
+			<Parts>
+				<Part Year="2023" Quarter="4" Requirement="20000000000" Deviation="55000000">
+					<Reasons>
+						<Reason>7</Reason>
+					</Reasons>
+				</Part>
+				<Part Year="2024" Quarter="1" Requirement="140519319422" Deviation="-5000000">
+					<Reasons>
+						<Reason>1</Reason>
+						<Reason>2</Reason>
+					</Reasons>
+				</Part>
+			</Parts>
+		</Supplement>
+	</Forms>
+</Message>
+
